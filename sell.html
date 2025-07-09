@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Items</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-500 min-h-screen font-inter">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div><span class="flex items-center text-2xl margin-1.5-rem">🛒</span>
+                <h1 class="text-3xl font-bold text-gray-800">Sell Items</h1>
+                <p class="text-gray-600 mt-2">Process customer sales and manage transactions</p>
+            </div>
+            <a href="index.html" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                 Back to Home
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Sales Form -->
+            <div class="bg-gradient-to-br from-pink-500 via-cyan-50 rounded-xl shadow-lg p-8 border border-gray-100">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">Sales Transaction</h2>
+                
+                <form id="sellForm" class="space-y-6">
+                    <div>
+                        <label for="itemSelect" class="block text-sm font-medium text-gray-700 mb-2">Select Item</label>
+                        <select id="itemSelect" name="itemSelect" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                            <option value="">Choose an item...</option>
+                        </select>
+                    </div>
+
+                    <div id="itemDetails" class="hidden bg-gray-50 p-4 rounded-lg">
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-600">Available Quantity:</span>
+                                <span id="availableQty" class="font-medium text-gray-800"></span>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Unit Price:</span>
+                                <span id="unitPrice" class="font-medium text-gray-800"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="customerName" class="block text-sm font-medium text-gray-700 mb-2">Customer Name</label>
+                        <input type="text" id="customerName" name="customerName" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                    </div>
+
+                    <div>
+                        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">Quantity to Sell</label>
+                        <input type="number" id="quantity" name="quantity" min="1" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                    </div>
+
+                    <div>
+                        <label for="discount" class="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                        <input type="number" id="discount" name="discount" min="0" max="100" value="0" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                    </div>
+
+                    <div>
+                        <label for="paymentMethod" class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                        <select id="paymentMethod" name="paymentMethod" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                            <option value="">Select payment method...</option>
+                            <option value="cash">Cash</option>
+                            <option value="invoice">Invoice</option>
+                            <option value="mpesa">Mobile Money (M-Pesa)</option>
+                        </select>
+                    </div>
+
+                    <div id="priceCalculation" class="hidden bg-purple-50 p-4 rounded-lg">
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span>Subtotal:</span>
+                                <span id="subtotal" class="font-medium">KES 0.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Discount:</span>
+                                <span id="discountAmount" class="font-medium text-red-600">-KES 0.00</span>
+                            </div>
+                            <div class="flex justify-between text-lg font-semibold border-t pt-2">
+                                <span>Total:</span>
+                                <span id="total" class="text-purple-600">KES 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="sellButton" class="w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors font-medium">
+                        Complete Sale
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sale Summary & Available Items -->
+            <div class="space-y-6">
+                <!-- Success Message -->
+                <div id="successMessage" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span id="successText">Sale completed successfully!</span>
+                    </div>
+                </div>
+
+                <!-- Available Items -->
+                <div class="bg-gradient-to-br from-pink-500 via-cyan-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Available Items</h3>
+                    <div id="availableItems" class="space-y-3">
+                        <!-- Available items will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-gradient-to-br from-pink-500 via-cyan-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="sale-records.html" class="block w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-center">
+                            View Sale Records
+                        </a>
+                        <a href="add.html" class="block w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors text-center">
+                            Add More Items
+                        </a>
+                        <a href="stock.html" class="block w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center">
+                            Check Stock
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            AuthManager.checkAuth();
+            
+            loadAvailableItems();
+            
+            // Handle item selection
+            document.getElementById('itemSelect').addEventListener('change', function() {
+                const selectedItem = inventoryData.getItem(this.value);
+                if (selectedItem) {
+                    showItemDetails(selectedItem);
+                } else {
+                    hideItemDetails();
+                }
+            });
+
+            // Handle quantity and discount changes
+            document.getElementById('quantity').addEventListener('input', updateCalculation);
+            document.getElementById('discount').addEventListener('input', updateCalculation);
+
+            // Handle form submission
+            document.getElementById('sellForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                processSale();
+            });
+        });
+
+        function loadAvailableItems() {
+            const itemSelect = document.getElementById('itemSelect');
+            const availableItems = document.getElementById('availableItems');
+            const items = inventoryData.items.filter(item => item.quantity > 0);
+            
+            // Populate select dropdown
+            itemSelect.innerHTML = '<option value="">Choose an item...</option>';
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = `${item.name} (${item.quantity} available)`;
+                itemSelect.appendChild(option);
+            });
+
+            // Populate available items list
+            if (items.length === 0) {
+                availableItems.innerHTML = '<p class="text-gray-500 text-sm">No items available for sale.</p>';
+                return;
+            }
+
+            availableItems.innerHTML = items.map(item => `
+                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div>
+                        <p class="font-medium text-gray-800">${item.name}</p>
+                        <p class="text-sm text-gray-600">KES ${item.price.toFixed(2)} per unit</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-800">${item.quantity} available</p>
+                        <p class="text-xs text-gray-500">Total: KES ${(item.quantity * item.price).toFixed(2)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showItemDetails(item) {
+            document.getElementById('itemDetails').classList.remove('hidden');
+            document.getElementById('availableQty').textContent = item.quantity;
+            document.getElementById('unitPrice').textContent = `KES ${item.price.toFixed(2)}`;
+            document.getElementById('quantity').max = item.quantity;
+            updateCalculation();
+        }
+
+        function hideItemDetails() {
+            document.getElementById('itemDetails').classList.add('hidden');
+            document.getElementById('priceCalculation').classList.add('hidden');
+        }
+
+        function updateCalculation() {
+            const itemId = document.getElementById('itemSelect').value;
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            
+            if (!itemId || quantity <= 0) {
+                document.getElementById('priceCalculation').classList.add('hidden');
+                return;
+            }
+
+            const item = inventoryData.getItem(itemId);
+            if (!item) return;
+
+            const subtotal = item.price * quantity;
+            const discountAmount = (subtotal * discount) / 100;
+            const total = subtotal - discountAmount;
+
+            document.getElementById('subtotal').textContent = `KES ${subtotal.toFixed(2)}`;
+            document.getElementById('discountAmount').textContent = `-KES ${discountAmount.toFixed(2)}`;
+            document.getElementById('total').textContent = `KES ${total.toFixed(2)}`;
+            document.getElementById('priceCalculation').classList.remove('hidden');
+        }
+
+        function processSale() {
+            const formData = new FormData(document.getElementById('sellForm'));
+            const itemId = formData.get('itemSelect');
+            const customerName = formData.get('customerName');
+            const quantity = parseInt(formData.get('quantity'));
+            const discount = parseFloat(formData.get('discount'));
+            const paymentMethod = formData.get('paymentMethod');
+
+            const item = inventoryData.getItem(itemId);
+            if (!item) {
+                alert('Please select a valid item.');
+                return;
+            }
+
+            if (quantity > item.quantity) {
+                alert(`Only ${item.quantity} units available.`);
+                return;
+            }
+
+            // Process the sale
+            const sale = inventoryData.addSale(itemId, customerName, quantity, discount, paymentMethod);
+            
+            if (sale) {
+                // Show success message
+                const successMessage = document.getElementById('successMessage');
+                const successText = document.getElementById('successText');
+                successText.innerHTML = `
+                    Sale completed successfully!<br>
+                    <small>Total: KES ${sale.totalPrice.toFixed(2)} • Payment: ${paymentMethod}</small>
+                `;
+                successMessage.classList.remove('hidden');
+                
+                // Reset form
+                document.getElementById('sellForm').reset();
+                hideItemDetails();
+                loadAvailableItems();
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.classList.add('hidden');
+                }, 5000);
+            } else {
+                alert('Error processing sale. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
