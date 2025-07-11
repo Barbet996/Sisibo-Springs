@@ -213,7 +213,9 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Check authentication
-            AuthManager.checkAuth();
+            if (!AuthManager.checkRole('admin')) {
+                return; // Will redirect automatically
+            }
             
             loadSaleRecords();
             loadRecentlyDeletedRecords();

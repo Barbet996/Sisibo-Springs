@@ -148,7 +148,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check authentication
-            AuthManager.checkAuth();
+            if (!AuthManager.checkRole(['admin', 'manager'])) {
+                return; // Will redirect automatically
+            }
             
             loadAvailableItems();
             loadRecentTransfers();

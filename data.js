@@ -400,6 +400,59 @@ class AuthManager {
         return JSON.parse(currentUser);
     }
 
+    static checkRole(requiredRoles) {
+        const currentUser = this.getCurrentUser();
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return false;
+        }
+        
+        // If requiredRoles is a string, convert to array
+        const roles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
+        
+        if (!roles.includes(currentUser.role)) {
+            // Redirect to appropriate page based on role
+            this.redirectToAuthorizedPage(currentUser.role);
+            return false;
+        }
+        
+        return true;
+    }
+
+    static redirectToAuthorizedPage(userRole) {
+        switch(userRole) {
+            case 'admin':
+                // Admin has access to everything, shouldn't reach here
+                window.location.href = 'index.html';
+                break;
+            case 'manager':
+                // Redirect to sell page (manager's main function)
+                window.location.href = 'sell.html';
+                break;
+            case 'staff':
+                // Redirect to sell page (staff's only function)
+                window.location.href = 'sell.html';
+                break;
+            default:
+                window.location.href = 'login.html';
+        }
+    }
+
+    static hasAccess(feature) {
+        const currentUser = this.getCurrentUser();
+        if (!currentUser) return false;
+        
+        const permissions = {
+            'admin': [
+                'add-items', 'stock-summary', 'sell-items', 'transfer-stock',
+                'sale-records', 'transfer-records', 'stock-adjust', 'adjustment-records'
+            ],
+            'manager': ['sell-items', 'transfer-stock'],
+            'staff': ['sell-items']
+        };
+        
+        return permissions[currentUser.role]?.includes(feature) || false;
+    }
     static logout() {
         localStorage.removeItem('currentUser');
         window.location.href = 'login.html';

@@ -174,7 +174,12 @@
                         localStorage.setItem('currentUser', JSON.stringify(sessionData));
                         
                         // Redirect to main application
-                        window.location.href = 'index.html';
+                        // Redirect based on user role
+                        if (user.role === 'admin') {
+                            window.location.href = 'index.html';
+                        } else {
+                            window.location.href = 'sell.html';
+                        }
                     } else {
                         showError('Invalid username or password. Please try again.');
                         showLoading(false);
