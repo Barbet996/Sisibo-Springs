@@ -183,32 +183,20 @@
         function loadAvailableItems() {
             const itemSelect = document.getElementById('itemSelect');
             const availableItems = document.getElementById('availableItems');
-            const currentUser = AuthManager.getCurrentUser();
-            let items;
-            
-            if (currentUser && currentUser.role === 'admin') {
-                items = inventoryData.items.filter(item => item.quantity > 0);
-            } else {
-                items = inventoryData.getItemsForRole(currentUser.role).filter(item => item.quantity > 0);
-            }
+            const items = inventoryData.items.filter(item => item.quantity > 0);
             
             // Populate select dropdown
             itemSelect.innerHTML = '<option value="">Choose an item...</option>';
             items.forEach(item => {
                 const option = document.createElement('option');
                 option.value = item.id;
-                const availableQty = currentUser && currentUser.role !== 'admin' ? 
-                    inventoryData.getAllocatedStock(item.id, currentUser.role) : item.quantity;
-                option.textContent = `${item.name} (${availableQty} available)`;
+                option.textContent = `${item.name} (${item.quantity} available)`;
                 itemSelect.appendChild(option);
             });
 
             // Populate available items list
             if (items.length === 0) {
-                const noItemsMessage = currentUser && currentUser.role !== 'admin' ? 
-                    'No items allocated to you for sale. Contact admin for stock allocation.' : 
-                    'No items available for sale.';
-                availableItems.innerHTML = `<p class="text-gray-500 text-sm">${noItemsMessage}</p>`;
+                availableItems.innerHTML = '<p class="text-gray-500 text-sm">No items available for sale.</p>';
                 return;
             }
 
@@ -227,14 +215,10 @@
         }
 
         function showItemDetails(item) {
-            const currentUser = AuthManager.getCurrentUser();
-            const availableQty = currentUser && currentUser.role !== 'admin' ? 
-                inventoryData.getAllocatedStock(item.id, currentUser.role) : item.quantity;
-                
             document.getElementById('itemDetails').classList.remove('hidden');
-            document.getElementById('availableQty').textContent = availableQty;
+            document.getElementById('availableQty').textContent = item.quantity;
             document.getElementById('unitPrice').textContent = `KES ${item.price.toFixed(2)}`;
-            document.getElementById('quantity').max = availableQty;
+            document.getElementById('quantity').max = item.quantity;
             updateCalculation();
         }
 
@@ -284,21 +268,15 @@
                 alert(`Only ${item.quantity} units available.`);
                 return;
             }
-                const displayQty = currentUser && currentUser.role !== 'admin' ? 
-                    inventoryData.getAllocatedStock(item.id, currentUser.role) : item.quantity;
-                const totalValue = displayQty * item.price;
-                
 
             // Process the sale
             const sale = inventoryData.addSale(itemId, customerName, quantity, discount, paymentMethod);
             
             if (sale) {
-                            ${currentUser && currentUser.role !== 'admin' ? 
-                                '<p class="text-xs text-blue-600">Allocated to you</p>' : ''}
                 // Show success message
                 const successMessage = document.getElementById('successMessage');
-                            <p class="text-sm font-medium text-gray-800">${displayQty} available</p>
-                            <p class="text-xs text-gray-500">Value: KES ${totalValue.toFixed(2)}</p>
+                const successText = document.getElementById('successText');
+                successText.innerHTML = `
                     Sale completed successfully!<br>
                     <small>Total: KES ${sale.totalPrice.toFixed(2)} • Payment: ${paymentMethod}</small>
                 `;
