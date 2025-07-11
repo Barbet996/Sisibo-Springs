@@ -7,8 +7,90 @@ class InventoryData {
         this.adjustments = this.loadAdjustments();
         this.deletedItems = this.loadDeletedItems();
         this.deletedRecords = this.loadDeletedRecords();
+        this.stockAllocations = this.loadStockAllocations();
     }
 
+    // Stock Allocations Management
+    loadStockAllocations() {
+        return JSON.parse(localStorage.getItem('inventory_stock_allocations') || '{}');
+    }
+
+    saveStockAllocations() {
+        localStorage.setItem('inventory_stock_allocations', JSON.stringify(this.stockAllocations));
+    }
+
+    // Allocate stock to a user role
+    allocateStock(itemId, userRole, allocatedQuantity) {
+        const item = this.getItem(itemId);
+        if (!item) return null;
+
+        const allocationKey = `${itemId}_${userRole}`;
+        const currentAllocation = this.stockAllocations[allocationKey] || 0;
+        const totalAllocated = this.getTotalAllocatedStock(itemId);
+        const availableForAllocation = item.quantity - totalAllocated + currentAllocation;
+
+        if (allocatedQuantity > availableForAllocation) {
+            return null; // Not enough stock available for allocation
+        }
+
+        this.stockAllocations[allocationKey] = parseInt(allocatedQuantity);
+        this.saveStockAllocations();
+        return this.stockAllocations[allocationKey];
+    }
+
+    // Get allocated stock for a specific user role and item
+    getAllocatedStock(itemId, userRole) {
+        const allocationKey = `${itemId}_${userRole}`;
+        return this.stockAllocations[allocationKey] || 0;
+    }
+
+    // Get total allocated stock for an item across all roles
+    getTotalAllocatedStock(itemId) {
+        let total = 0;
+        Object.keys(this.stockAllocations).forEach(key => {
+            if (key.startsWith(`${itemId}_`)) {
+                total += this.stockAllocations[key];
+            }
+        });
+        return total;
+    }
+
+    // Get available stock for allocation (admin view)
+    getAvailableForAllocation(itemId) {
+        const item = this.getItem(itemId);
+        if (!item) return 0;
+        return item.quantity - this.getTotalAllocatedStock(itemId);
+    }
+
+    // Get items available to a specific role
+    getItemsForRole(userRole) {
+        if (userRole === 'admin') {
+            return this.items; // Admin sees all items
+        }
+
+        return this.items.filter(item => {
+            const allocatedQty = this.getAllocatedStock(item.id, userRole);
+            return allocatedQty > 0;
+        }).map(item => ({
+            ...item,
+            quantity: this.getAllocatedStock(item.id, userRole), // Override quantity with allocated amount
+            originalQuantity: item.quantity // Keep original for reference
+        }));
+    }
+
+    // Update allocated stock when items are sold or transferred
+    updateAllocatedStock(itemId, userRole, quantityUsed) {
+        const allocationKey = `${itemId}_${userRole}`;
+        const currentAllocation = this.stockAllocations[allocationKey] || 0;
+        const newAllocation = Math.max(0, currentAllocation - quantityUsed);
+        
+        if (newAllocation === 0) {
+            delete this.stockAllocations[allocationKey];
+        } else {
+            this.stockAllocations[allocationKey] = newAllocation;
+        }
+        this.saveStockAllocations();
+    }
     // Items Management
     loadItems() {
         return JSON.parse(localStorage.getItem('inventory_items') || '[]');
@@ -109,11 +191,21 @@ class InventoryData {
 
     addSale(itemId, customerName, quantitySold, discount, paymentMethod) {
         const item = this.getItem(itemId);
-        if (!item || item.quantity < quantitySold) {
+        const currentUser = AuthManager.getCurrentUser();
+        let availableQuantity = item.quantity;
+        
+        // For non-admin users, check allocated stock
+        if (currentUser && currentUser.role !== 'admin') {
+            availableQuantity = this.getAllocatedStock(itemId, currentUser.role);
+        }
+        
+        if (!item || availableQuantity < quantitySold) {
             return null;
         }
 
         const openingStock = item.quantity;
+        const allocatedStock = currentUser && currentUser.role !== 'admin' ? 
+            this.getAllocatedStock(itemId, currentUser.role) : item.quantity;
         const subtotal = item.price * quantitySold;
         const discountAmount = (subtotal * discount) / 100;
         const totalPrice = subtotal - discountAmount;
@@ -132,11 +224,20 @@ class InventoryData {
             paymentMethod,
             date: new Date().toISOString(),
             openingStock,
-            closingStock: openingStock - quantitySold
+            closingStock: openingStock - quantitySold,
+            soldBy: currentUser ? currentUser.role : 'unknown',
+            allocatedStock: allocatedStock,
+            allocatedAfterSale: allocatedStock - quantitySold
         };
 
         this.sales.push(sale);
         this.updateItemQuantity(itemId, openingStock - quantitySold);
+        
+        // Update allocated stock for non-admin users
+        if (currentUser && currentUser.role !== 'admin') {
+            this.updateAllocatedStock(itemId, currentUser.role, quantitySold);
+        }
+        
         this.saveSales();
         return sale;
     }
@@ -203,11 +304,21 @@ class InventoryData {
 
     addTransfer(itemId, personName, quantityTransferred) {
         const item = this.getItem(itemId);
-        if (!item || item.quantity < quantityTransferred) {
+        const currentUser = AuthManager.getCurrentUser();
+        let availableQuantity = item.quantity;
+        
+        // For non-admin users, check allocated stock
+        if (currentUser && currentUser.role !== 'admin') {
+            availableQuantity = this.getAllocatedStock(itemId, currentUser.role);
+        }
+        
+        if (!item || availableQuantity < quantityTransferred) {
             return null;
         }
 
         const openingStock = item.quantity;
+        const allocatedStock = currentUser && currentUser.role !== 'admin' ? 
+            this.getAllocatedStock(itemId, currentUser.role) : item.quantity;
         const transfer = {
             id: Date.now().toString(),
             itemId,
@@ -216,11 +327,20 @@ class InventoryData {
             quantityTransferred: parseInt(quantityTransferred),
             date: new Date().toISOString(),
             openingStock,
-            closingStock: openingStock - quantityTransferred
+            closingStock: openingStock - quantityTransferred,
+            transferredBy: currentUser ? currentUser.role : 'unknown',
+            allocatedStock: allocatedStock,
+            allocatedAfterTransfer: allocatedStock - quantityTransferred
         };
 
         this.transfers.push(transfer);
         this.updateItemQuantity(itemId, openingStock - quantityTransferred);
+        
+        // Update allocated stock for non-admin users
+        if (currentUser && currentUser.role !== 'admin') {
+            this.updateAllocatedStock(itemId, currentUser.role, quantityTransferred);
+        }
+        
         this.saveTransfers();
         return transfer;
     }
@@ -445,7 +565,7 @@ class AuthManager {
         const permissions = {
             'admin': [
                 'add-items', 'stock-summary', 'sell-items', 'transfer-stock',
-                'sale-records', 'transfer-records', 'stock-adjust', 'adjustment-records'
+                'sale-records', 'transfer-records', 'stock-adjust', 'adjustment-records', 'stock-allocation'
             ],
             'manager': ['sell-items', 'transfer-stock'],
             'staff': ['sell-items']
