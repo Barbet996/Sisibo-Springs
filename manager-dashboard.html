@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-200 min-h-screen font-inter">
+    <!-- Header with User Info -->
+    <div class="bg-gradient-to-br from-teal-300 via-indigo-50 to-cyan-900 border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">SISIBO SPRINGS LTD - Manager Portal</h1>
+                    <p class="text-sm text-gray-800">Manage your team and inventory efficiently</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-800" id="userName">Welcome, Manager</p>
+                        <p class="text-xs text-gray-600" id="userRole">Manager</p>
+                    </div>
+                    <a href="profile.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                        👤 Profile
+                    </a>
+                    <button onclick="AuthManager.logout()" class="bg-cyan-900 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Main Title -->
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Manager Dashboard</h2>
+            <p class="text-lg text-gray-600">Oversee operations and manage your team</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">My Stock Items</p>
+                        <p id="managerStockCount" class="text-2xl font-bold text-blue-600">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">📦</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Sales</p>
+                        <p id="totalSales" class="text-2xl font-bold text-green-600">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">💰</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Staff Transfers</p>
+                        <p id="staffTransfers" class="text-2xl font-bold text-orange-600">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🔄</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Active Staff</p>
+                        <p id="activeStaff" class="text-2xl font-bold text-purple-600">3</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">👥</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <!-- My Stock Summary -->
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">📊</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">My Stock Summary</h3>
+                    <p class="text-sm text-gray-600 mb-4">View your allocated inventory</p>
+                    <a href="manager-stock.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        View Stock
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sell Items -->
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🛒</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Sell Items</h3>
+                    <p class="text-sm text-gray-600 mb-4">Process sales from your stock</p>
+                    <a href="manager-sell.html" class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        Sell Items
+                    </a>
+                </div>
+            </div>
+
+            <!-- Transfer to Staff -->
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">📤</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Transfer to Staff</h3>
+                    <p class="text-sm text-gray-600 mb-4">Allocate stock to your team</p>
+                    <a href="manager-transfer.html" class="inline-block bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+                        Transfer Stock
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sale Records -->
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">📋</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Sale Records</h3>
+                    <p class="text-sm text-gray-600 mb-4">View sales history</p>
+                    <a href="manager-sales.html" class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                        View Records
+                    </a>
+                </div>
+            </div>
+
+            <!-- Transfer Records -->
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">📝</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Transfer Records</h3>
+                    <p class="text-sm text-gray-600 mb-4">Track staff allocations</p>
+                    <a href="manager-transfers.html" class="inline-block bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors">
+                        View Transfers
+                    </a>
+                </div>
+            </div>
+
+            <!-- Adjustment Records -->
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">⚙️</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Adjustment Records</h3>
+                    <p class="text-sm text-gray-600 mb-4">View stock adjustments</p>
+                    <a href="manager-adjustments.html" class="inline-block bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
+                        View Adjustments
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-12 text-gray-500">
+            <p>&copy; Sisibo Company LTD. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const user = AuthManager.checkAuth();
+            if (user && user.role === 'manager') {
+                document.getElementById('userName').textContent = `Welcome, ${user.name}`;
+                document.getElementById('userRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+                
+                loadManagerStats();
+            }
+        });
+        
+        function loadManagerStats() {
+            const managerStock = inventoryData.getManagerStock();
+            const managerSales = inventoryData.getSalesByUser('manager');
+            const managerTransfers = inventoryData.getTransfersByUser('manager');
+            
+            document.getElementById('managerStockCount').textContent = managerStock.length;
+            document.getElementById('totalSales').textContent = managerSales.length;
+            document.getElementById('staffTransfers').textContent = managerTransfers.length;
+        }
+    </script>
+</body>
+</html>

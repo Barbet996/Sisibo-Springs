@@ -60,8 +60,10 @@
 
                     <div>
                         <label for="personName" class="block text-sm font-medium text-gray-700 mb-2">Sales Person Name</label>
-                        <input type="text" id="personName" name="personName" required placeholder="Enter sales person name"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors">
+                        <select id="personName" name="personName" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors">
+                            <option value="">Select recipient...</option>
+                        </select>
                     </div>
 
                     <div>
@@ -152,6 +154,7 @@
                 return; // Will redirect automatically
             }
             
+            loadRecipients();
             loadAvailableItems();
             loadRecentTransfers();
             
@@ -175,10 +178,37 @@
             });
         });
 
+        function loadRecipients() {
+            const personSelect = document.getElementById('personName');
+            const currentUser = AuthManager.getCurrentUser();
+            
+            personSelect.innerHTML = '<option value="">Select recipient...</option>';
+            
+            if (currentUser.role === 'admin') {
+                // Admin can transfer to manager
+                personSelect.innerHTML += '<option value="manager">Manager</option>';
+            } else if (currentUser.role === 'manager') {
+                // Manager can transfer to staff
+                const users = inventoryData.users;
+                Object.entries(users).forEach(([username, user]) => {
+                    if (user.role === 'staff') {
+                        personSelect.innerHTML += `<option value="${username}">${user.name} (@${username})</option>`;
+                    }
+                });
+            }
+        }
+
         function loadAvailableItems() {
             const itemSelect = document.getElementById('itemSelect');
             const availableItems = document.getElementById('availableItems');
-            const items = inventoryData.items.filter(item => item.quantity > 0);
+            const currentUser = AuthManager.getCurrentUser();
+            let items = [];
+            
+            if (currentUser.role === 'admin') {
+                items = inventoryData.items.filter(item => item.quantity > 0);
+            } else if (currentUser.role === 'manager') {
+                items = inventoryData.getManagerStock().filter(item => item.quantity > 0);
+            }
             
             // Populate select dropdown
             itemSelect.innerHTML = '<option value="">Choose an item...</option>';
@@ -272,8 +302,16 @@
             const itemId = formData.get('itemSelect');
             const personName = formData.get('personName');
             const quantity = parseInt(formData.get('quantity'));
+            const currentUser = AuthManager.getCurrentUser();
 
-            const item = inventoryData.getItem(itemId);
+            let item = null;
+            if (currentUser.role === 'admin') {
+                item = inventoryData.getItem(itemId);
+            } else if (currentUser.role === 'manager') {
+                const managerStock = inventoryData.getManagerStock();
+                item = managerStock.find(s => s.itemId === itemId);
+            }
+            
             if (!item) {
                 alert('Please select a valid item.');
                 return;
@@ -285,20 +323,25 @@
             }
 
             // Process the transfer
-            const transfer = inventoryData.addTransfer(itemId, personName, quantity);
+            const transferType = currentUser.role === 'admin' ? 'manager' : 'staff';
+            const transfer = inventoryData.addTransfer(itemId, personName, quantity, transferType);
             
             if (transfer) {
                 // Show success message
                 const successMessage = document.getElementById('successMessage');
                 const successText = document.getElementById('successText');
+                const itemName = item.name || item.itemName;
+                const recipientName = personName === 'manager' ? 'Manager' : inventoryData.users[personName]?.name || personName;
+                
                 successText.innerHTML = `
                     Transfer completed successfully!<br>
-                    <small>${quantity} units of ${item.name} transferred to ${personName}</small>
+                    <small>${quantity} units of ${itemName} transferred to ${recipientName}</small>
                 `;
                 successMessage.classList.remove('hidden');
                 
                 // Reset form
                 document.getElementById('transferForm').reset();
+                loadRecipients();
                 hideItemDetails();
                 loadAvailableItems();
                 loadRecentTransfers();

@@ -99,7 +99,9 @@
                     <div class="text-xs text-blue-100 space-y-1">
                         <p><strong>Admin:</strong> admin / admin123</p>
                         <p><strong>Manager:</strong> manager / manager123</p>
-                        <p><strong>Staff:</strong> staff / staff123</p>
+                        <p><strong>Staff 1:</strong> staff1 / staff123</p>
+                        <p><strong>Staff 2:</strong> staff2 / staff456</p>
+                        <p><strong>Staff 3:</strong> staff3 / staff789</p>
                     </div>
                 </div>
             </div>
@@ -116,7 +118,9 @@
         const users = {
             'admin': { password: 'admin123', role: 'admin', name: 'Administrator' },
             'manager': { password: 'manager123', role: 'manager', name: 'Manager' },
-            'staff': { password: 'staff123', role: 'staff', name: 'Staff Member' }
+            'staff1': { password: 'staff123', role: 'staff', name: 'Staff Member 1' },
+            'staff2': { password: 'staff456', role: 'staff', name: 'Staff Member 2' },
+            'staff3': { password: 'staff789', role: 'staff', name: 'Staff Member 3' }
         };
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -177,8 +181,12 @@
                         // Redirect based on user role
                         if (user.role === 'admin') {
                             window.location.href = 'index.html';
+                        } else if (user.role === 'manager') {
+                            window.location.href = 'manager-dashboard.html';
+                        } else if (user.role === 'staff') {
+                            window.location.href = 'staff-dashboard.html';
                         } else {
-                            window.location.href = 'sell.html';
+                            window.location.href = 'index.html';
                         }
                     } else {
                         showError('Invalid username or password. Please try again.');
