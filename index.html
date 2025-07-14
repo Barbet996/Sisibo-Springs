@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -24,18 +24,18 @@
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">SISIBO SPRINGS LTD</h1>
-                    <p class="text-sm text-gray-800">Complete stock management for your business</p>
+                    <h1 class="text-2xl font-bold text-gray-900">SISIBO SPRINGS LTD - Admin Portal</h1>
+                    <p class="text-sm text-gray-800">Complete inventory management and system administration</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="text-right">
-                        <p class="text-sm font-medium text-gray-800" id="userName">Welcome, User</p>
-                        <p class="text-xs text-gray-600" id="userRole">Role</p>
+                        <p class="text-sm font-medium text-gray-800" id="userName">Welcome, Administrator</p>
+                        <p class="text-xs text-gray-600" id="userRole">Admin</p>
                     </div>
                     <a href="profile.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
                         👤 Profile
                     </a>
-                    <button onclick="AuthManager.logout()" class="bg-cyan-900 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                    <button onclick="AuthManager.logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
                         Logout
                     </button>
                 </div>
@@ -46,35 +46,98 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Main Title -->
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4">Dashboard</h2>
-            <p class="text-lg text-gray-600">Manage your inventory with ease</p>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Admin Dashboard</h2>
+            <p class="text-lg text-gray-600">Manage your entire inventory system</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Items</p>
+                        <p id="totalItems" class="text-2xl font-bold text-blue-600">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Sales</p>
+                        <p id="totalSales" class="text-2xl font-bold text-green-600">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Transfers</p>
+                        <p id="totalTransfers" class="text-2xl font-bold text-orange-600">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">System Users</p>
+                        <p id="totalUsers" class="text-2xl font-bold text-purple-600">5</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Navigation Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <!-- Add Items -->
-            <div id="addItemsCard" class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">➕</span>
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Add Items</h3>
-                    <p class="text-sm text-gray-600 mb-4">Add new inventory items with quantity and pricing</p>
-                    <a href="add.html" id="addItemsLink" class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    <p class="text-sm text-gray-600 mb-4">Add new inventory items</p>
+                    <a href="add.html" class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
                         Add Items
                     </a>
                 </div>
             </div>
 
             <!-- Stock Summary -->
-            <div id="stockSummaryCard" class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">📦</span>
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Stock Summary</h3>
-                    <p class="text-sm text-gray-600 mb-4">View current stock levels and inventory status</p>
-                    <a href="stock.html" id="stockSummaryLink" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <p class="text-sm text-gray-600 mb-4">View inventory status</p>
+                    <a href="stock.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                         View Stock
                     </a>
                 </div>
@@ -84,10 +147,12 @@
             <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">🛒</span>
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Sell Items</h3>
-                    <p class="text-sm text-gray-600 mb-4">Process sales and manage customer transactions</p>
+                    <p class="text-sm text-gray-600 mb-4">Process sales transactions</p>
                     <a href="sell.html" class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors">
                         Sell Items
                     </a>
@@ -95,68 +160,80 @@
             </div>
 
             <!-- Transfer Stock -->
-            <div id="transferStockCard" class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">📤</span>
+                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                        </svg>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Transfer Stock</h3>
-                    <p class="text-sm text-gray-600 mb-4">Transfer items to sales personnel</p>
-                    <a href="stock-transfer.html" id="transferStockLink" class="inline-block bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Transfer to Manager</h3>
+                    <p class="text-sm text-gray-600 mb-4">Allocate stock to manager</p>
+                    <a href="stock-transfer.html" class="inline-block bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors">
                         Transfer Stock
                     </a>
                 </div>
             </div>
 
             <!-- Sale Records -->
-            <div id="saleRecordsCard" class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">📋</span>
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Sale Records</h3>
-                    <p class="text-sm text-gray-600 mb-4">View detailed sales history and reports</p>
-                    <a href="sale-records.html" id="saleRecordsLink" class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    <p class="text-sm text-gray-600 mb-4">View all sales history</p>
+                    <a href="sale-records.html" class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
                         View Records
                     </a>
                 </div>
             </div>
 
             <!-- Transfer Records -->
-            <div id="transferRecordsCard" class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <div class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">📝</span>
+                        <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Transfer Records</h3>
-                    <p class="text-sm text-gray-600 mb-4">Track all stock transfer activities</p>
-                    <a href="transfer-records.html" id="transferRecordsLink" class="inline-block bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors">
+                    <p class="text-sm text-gray-600 mb-4">Track all transfers</p>
+                    <a href="transfer-records.html" class="inline-block bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors">
                         View Transfers
                     </a>
                 </div>
             </div>
 
             <!-- Stock Adjust -->
-            <div id="stockAdjustCard" class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">⚙️</span>
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Stock Adjust</h3>
-                    <p class="text-sm text-gray-600 mb-4">Adjust stock levels and quantities</p>
-                    <a href="stock-adjust.html" id="stockAdjustLink" class="inline-block bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
+                    <p class="text-sm text-gray-600 mb-4">Adjust stock levels</p>
+                    <a href="stock-adjust.html" class="inline-block bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
                         Adjust Stock
                     </a>
                 </div>
             </div>
 
-            <div id="userManagementCard" class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <!-- User Management -->
+            <div id="userManagementCard" class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">👥</span>
+                        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">User Management</h3>
-                    <p class="text-sm text-gray-600 mb-4">Manage system users and access</p>
+                    <p class="text-sm text-gray-600 mb-4">Manage system users</p>
                     <a href="user-management.html" id="userManagementLink" class="inline-block bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors">
                         Manage Users
                     </a>
@@ -164,14 +241,16 @@
             </div>
 
             <!-- Adjustment Records -->
-            <div id="adjustmentRecordsCard" class="bg-gradient-to-br from-purple-400 via-blue-50 to-teal-300 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
+            <div class="bg-gradient-to-br from-purple-300 via-blue-50 to-teal-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">📊</span>
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Adjustment Records</h3>
-                    <p class="text-sm text-gray-600 mb-4">View all stock adjustment history</p>
-                    <a href="adjustment-records.html" id="adjustmentRecordsLink" class="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    <p class="text-sm text-gray-600 mb-4">View all adjustments</p>
+                    <a href="adjustment-records.html" class="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
                         View Adjustments
                     </a>
                 </div>
@@ -189,63 +268,24 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Check authentication
             const user = AuthManager.checkAuth();
-            if (user) {
+            if (user && user.role === 'admin') {
                 document.getElementById('userName').textContent = `Welcome, ${user.name}`;
                 document.getElementById('userRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
                 
-                // Apply role-based access control
-                applyRoleBasedAccess(user.role);
+                loadAdminStats();
             }
         });
         
-        function applyRoleBasedAccess(userRole) {
-            const features = [
-                { id: 'addItemsCard', feature: 'add-items', link: 'addItemsLink' },
-                { id: 'stockSummaryCard', feature: 'stock-summary', link: 'stockSummaryLink' },
-                { id: 'transferStockCard', feature: 'transfer-stock', link: 'transferStockLink' },
-                { id: 'saleRecordsCard', feature: 'sale-records', link: 'saleRecordsLink' },
-                { id: 'transferRecordsCard', feature: 'transfer-records', link: 'transferRecordsLink' },
-                { id: 'stockAdjustCard', feature: 'stock-adjust', link: 'stockAdjustLink' },
-                { id: 'adjustmentRecordsCard', feature: 'adjustment-records', link: 'adjustmentRecordsLink' },
-                { id: 'userManagementCard', feature: 'user-management', link: 'userManagementLink' }
-            ];
+        function loadAdminStats() {
+            const items = inventoryData.items;
+            const sales = inventoryData.sales;
+            const transfers = inventoryData.transfers;
+            const users = Object.keys(inventoryData.users);
             
-            features.forEach(({ id, feature, link }) => {
-                const card = document.getElementById(id);
-                const linkElement = document.getElementById(link);
-                
-                if (!AuthManager.hasAccess(feature)) {
-                    // Disable the card
-                    card.classList.add('opacity-50', 'cursor-not-allowed');
-                    card.classList.remove('hover:shadow-xl', 'hover:-translate-y-1');
-                    
-                    // Replace link with disabled button
-                    if (linkElement) {
-                        const disabledButton = document.createElement('button');
-                        disabledButton.className = linkElement.className.replace('hover:bg-', 'bg-gray-400 cursor-not-allowed ');
-                        disabledButton.textContent = linkElement.textContent;
-                        disabledButton.disabled = true;
-                        disabledButton.onclick = () => {
-                            alert('Access denied. You do not have permission to access this feature.');
-                        };
-                        linkElement.parentNode.replaceChild(disabledButton, linkElement);
-                    }
-                    
-                    // Add "Access Restricted" overlay
-                    const overlay = document.createElement('div');
-                    overlay.className = 'absolute inset-0 bg-gray-900 bg-opacity-50 rounded-xl flex items-center justify-center';
-                    overlay.innerHTML = `
-                        <div class="text-center text-white">
-                            <svg class="w-8 h-8 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            <p class="text-sm font-medium">Access Restricted</p>
-                        </div>
-                    `;
-                    card.style.position = 'relative';
-                    card.appendChild(overlay);
-                }
-            });
+            document.getElementById('totalItems').textContent = items.length;
+            document.getElementById('totalSales').textContent = sales.length;
+            document.getElementById('totalTransfers').textContent = transfers.length;
+            document.getElementById('totalUsers').textContent = users.length;
         }
     </script>
 </body>
